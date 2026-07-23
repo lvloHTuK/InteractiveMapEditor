@@ -1,0 +1,9 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./data/data.sqlite:/app/server/data.sqlite
+      - ./data/uploads:/app/server/uploads

@@ -1,0 +1,29 @@
+# Runs the app (server + built client, single Node process) under systemd.
+#
+# Setup on the server:
+#   sudo useradd -r -s /usr/sbin/nologin mapeditor   # or reuse an existing user
+#   sudo mkdir -p /opt/mapeditor && sudo chown mapeditor:mapeditor /opt/mapeditor
+#   git clone <repo-url> /opt/mapeditor   (or copy the project there)
+#   cd /opt/mapeditor && npm run install:all && npm run build
+#   sudo cp deploy/mapeditor.service /etc/systemd/system/mapeditor.service
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now mapeditor
+#
+# After pulling new code: npm run install:all && npm run build && sudo systemctl restart mapeditor
+
+[Unit]
+Description=Interactive Map Editor
+After=network.target
+
+[Service]
+Type=simple
+User=mapeditor
+WorkingDirectory=/opt/mapeditor/server
+Environment=NODE_ENV=production
+Environment=PORT=4000
+ExecStart=/usr/bin/node dist/index.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
